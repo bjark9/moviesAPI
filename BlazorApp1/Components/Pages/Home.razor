@@ -1,7 +1,22 @@
-﻿@page "/"
+﻿@inject HttpClient Htpp
+@page "/"
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
+
 Welcome to your new app.
+
+@code{
+    private string request;
+    private string url;
+    private string header;
+
+    protected override async Task OnInitializedAsync()
+    {
+        request = "GET";
+        url = "https://api.themoviedb.org/3/movie/11";
+        header = ";Authorization: Bearer <<eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmY4YWRmN2ZhMjhkODA3YTE2MjAxZGE5MGI3MDY3NyIsIm5iZiI6MTc3MTA1OTQ0OC40MDQsInN1YiI6IjY5OTAzOGY4MGU2YjA2NTkyMGM4ZWZiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.8NyvxkzjD3gsJ70Qg77t-GYK3x_NqeyfNhjfbfFglhw>>";
+    }
+}

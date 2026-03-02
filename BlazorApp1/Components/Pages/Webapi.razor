@@ -1,0 +1,41 @@
+@page "/call-web-api"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject IHttpClientFactory ClientFactory
+
+<h1>Call web API from a server-side Razor component</h1>
+
+<p>@movieJson</p>
+
+@if (movie != null)
+{
+    <h2>@movie.Title</h2>
+    <p>@movie.Overview</p>
+}
+
+@code{
+    private Movie movie;
+    private string movieJson;
+    private bool shouldRender;
+    protected override bool ShouldRender()=>shouldRender;
+    protected override async Task OnInitializedAsync()
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get,"https://api.themoviedb.org/3/movie/11");
+        
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer","eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmY4YWRmN2ZhMjhkODA3YTE2MjAxZGE5MGI3MDY3NyIsIm5iZiI6MTc3MTA1OTQ0OC40MDQsInN1YiI6IjY5OTAzOGY4MGU2YjA2NTkyMGM4ZWZiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.8NyvxkzjD3gsJ70Qg77t-GYK3x_NqeyfNhjfbfFglhw");
+
+        request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+        
+        var client = ClientFactory.CreateClient();
+        using var response = await client.SendAsync(request);
+        if(response.IsSuccessStatusCode)
+        {
+            movieJson = await response.Content.ReadAsStringAsync();
+            var movie = await response.Content.ReadFromJsonAsync<Movie>();
+        }
+        else{
+            movieJson = $"Error: {response.StatusCode}";
+        }
+        shouldRender = true;
+    }
+}
