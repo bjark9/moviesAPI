@@ -1,18 +1,21 @@
 ﻿@page "/"
 @inject SearchState SearchState
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer // Add this 
 
 <PageTitle>Home</PageTitle>
 
 <h1>Welcome: Millions of movies and TV shows to discover.</h1>
 <label for="site-search">Search something:</label>
-<input type="search" id="site-search" @bind="searchInput"/> <!-- @bind updates searchInput (local variable) -->
+<input type="search" id="site-search" @bind="searchInput" @bind:event="oninput" /> <!-- @bind updates searchInput (local variable) -->
 
-<button onclick="SaveInput()">Rechercher</button>
+<button @onclick="SaveInput">Search</button>
 
 @code{
     private string searchInput = string.Empty;
     private void SaveInput()
     {
         SearchState.SetQuery(searchInput);
+        NavigationManager.NavigateTo("/MovieComponent");
     }
 }

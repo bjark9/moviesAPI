@@ -11,11 +11,13 @@
     <link rel="stylesheet" href="@Assets["BlazorApp1.styles.css"]" />
     <ImportMap />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="InteractiveServer"/>
 </head>
 
 <body>
-    <Routes />
+    <Routes @rendermode="InteractiveServer"/>   @* Keep connection alive for entire application *@
+                                                @* Make router itself interactive, all navigation handled by router stays within existing Blazor Server circuit*@
+                                                @* Transition between two page will be client-side update and not a full page reload*@
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
