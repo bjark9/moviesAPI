@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddHttpClient(); // Add this for the API requests
+builder.Services.AddScoped<SearchState>(); // Add this so the SearchQuery is visible accross different components
 
 var app = builder.Build();
 

@@ -1,22 +1,18 @@
-﻿@inject HttpClient Htpp
-@page "/"
+﻿@page "/"
+@inject SearchState SearchState
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome: Millions of movies and TV shows to discover.</h1>
+<label for="site-search">Search something:</label>
+<input type="search" id="site-search" @bind="searchInput"/> <!-- @bind updates searchInput (local variable) -->
 
-
-Welcome to your new app.
+<button onclick="SaveInput()">Rechercher</button>
 
 @code{
-    private string request;
-    private string url;
-    private string header;
-
-    protected override async Task OnInitializedAsync()
+    private string searchInput = string.Empty;
+    private void SaveInput()
     {
-        request = "GET";
-        url = "https://api.themoviedb.org/3/movie/11";
-        header = ";Authorization: Bearer <<eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmY4YWRmN2ZhMjhkODA3YTE2MjAxZGE5MGI3MDY3NyIsIm5iZiI6MTc3MTA1OTQ0OC40MDQsInN1YiI6IjY5OTAzOGY4MGU2YjA2NTkyMGM4ZWZiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.8NyvxkzjD3gsJ70Qg77t-GYK3x_NqeyfNhjfbfFglhw>>";
+        SearchState.SetQuery(searchInput);
     }
 }

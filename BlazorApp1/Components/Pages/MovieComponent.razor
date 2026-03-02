@@ -1,0 +1,17 @@
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject SearchState SearchState
+@implements IDisposable
+
+<p>Current Search: @SearchState.Query</p>
+
+@code{
+    protected override void OnInitialized()
+    {
+        SearchState.OnChange += StateHasChanged;
+    }
+    public void Dispose()
+    {
+        SearchState.OnChange -= StateHasChanged;
+    }
+}
