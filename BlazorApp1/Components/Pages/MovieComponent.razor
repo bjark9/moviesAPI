@@ -1,17 +1,43 @@
 @page "/MovieComponent"
 @inject SearchState SearchState
+@inject HttpClient Http
 @implements IDisposable
 @rendermode InteractiveServer
 
-<p>Current Search: @SearchState.Query</p>
+<p>Current Search: @SearchState.Query </p>  <!-- Don't need exact title match, Search endpoint already handles this -->
+                                            <!-- returns all matching movies in an result array -->
+@if(movies == null)
+{
+    <p>No movies found...</p>
+}
+else{
+    @foreach(var movie in movies)
+    {
+        <div>
+            <h3>@movie.Title</h3>
+            <p>@movie.ReleaseDate</p>
+        </div>
+    }
+}
 
 @code{
+    private List<Movie> movies;
+    private const string Api_Key = "c6f8adf7fa28d807a16201da90b70677"; // simpler, passed through url query parameter, less secure
+    private const string Api_Read_Access_Token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmY4YWRmN2ZhMjhkODA3YTE2MjAxZGE5MGI3MDY3NyIsIm5iZiI6MTc3MTA1OTQ0OC40MDQsInN1YiI6IjY5OTAzOGY4MGU2YjA2NTkyMGM4ZWZiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.8NyvxkzjD3gsJ70Qg77t-GYK3x_NqeyfNhjfbfFglhw"; // More secure, passed via Authorization Header
     protected override void OnInitialized()
     {
-        SearchState.OnChange += StateHasChanged;
+        SearchState.OnChange += StateHasChanged; // Notifies the component that its state has changed. When applicable, this will cause the component to be re-rendered. 
     }
     public void Dispose()
     {
         SearchState.OnChange -= StateHasChanged;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var cleanQuery = SearchState.Query.ToLower(); 
+        var url = $"https://api.themoviedb.org/3/search/movie?api_key={Api_Key}&query={cleanQuery}"; 
+        var response = await Http.GetFromJsonAsync<TmdbResponse>(url);
+        movies = response?.Results;
     }
 }

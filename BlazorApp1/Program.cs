@@ -8,6 +8,11 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient(); // Add this for the API requests
 builder.Services.AddScoped<SearchState>(); // Add this so the SearchQuery is visible accross different components
 
+// debugging
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => {
+    options.DetailedErrors = true;
+}); 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
