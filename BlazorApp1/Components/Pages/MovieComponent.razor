@@ -8,14 +8,15 @@
                                             <!-- returns all matching movies in an result array -->
 @if(movies == null)
 {
-    <p>No movies found...</p>
+    <p>Loading...</p>
 }
 else{
     @foreach(var movie in movies)
     {
         <div>
             <h3>@movie.Title</h3>
-            <p>@movie.ReleaseDate</p>
+            <p>@movie.Overview</p>
+            <p><i>@movie.ReleaseDate</i></p>
         </div>
     }
 }
