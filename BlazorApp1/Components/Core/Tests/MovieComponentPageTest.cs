@@ -32,13 +32,15 @@ public class MovieComponentPageTest : TestContext
     {
         // Arrange – no HTTP setup so movies stays null
         _searchState.SetQuery("matrix");
-        var mockHttp = new MockHttpMessageHandler();
+        // Create a HTTP request and store it as a Singleton service
+        var mockHttp = new MockHttpMessageHandler(); // Create Fake HTTP handler
+        // Defines what to return when a request matches, here we delay it forever to stimulate the loading state
         mockHttp.When("*").Respond(async req =>
         {
             await Task.Delay(Timeout.Infinite); // never resolves
             return new HttpResponseMessage(HttpStatusCode.OK);
         });
-        Services.AddSingleton<HttpClient>(mockHttp.ToHttpClient());
+        Services.AddSingleton<HttpClient>(mockHttp.ToHttpClient()); // Wraps it inside a real httpclient instance
 
         // Act
         var cut = RenderComponent<MovieComponent>();
