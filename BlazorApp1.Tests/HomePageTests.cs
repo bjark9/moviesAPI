@@ -2,18 +2,19 @@ using BlazorApp1.Components.Pages;
 using Microsoft.AspNetCore.Components;
 using Bunit;
 using Xunit;
+using Microsoft.Extensions.DependencyInjection;
 
 // Run dotnet test for testing 
 
 public class HomeTests : TestContext
 {
-    private readonly FakeSearchState _searchState;
+    private readonly FakeSearchState fakeSearchState;
 
     public HomeTests()
     {
-        _searchState = new FakeSearchState();
+        var fakeSearchState = new FakeSearchState();
         // Singleton service is fine here (instead of scoped), bUnit's TestContext doesn't understand scopes -> will act the same 
-        Services.AddSingleton(_searchState);
+        Services.AddSingleton<SearchState>(fakeSearchState);
     }
     
     [Fact]
@@ -54,7 +55,7 @@ public class HomeTests : TestContext
         cut.Find("button").Click();
 
         // Assert, SearchState should hold the input
-        Assert.Equal("Star Wars", _searchState.Query.ToLower());
+        Assert.Equal("Star Wars", fakeSearchState.Query.ToLower());
 
         // Assert, navigationmanager should have navigated to /MovieComponent
         var navManager = Services.GetRequiredService<NavigationManager>();
@@ -72,7 +73,7 @@ public class HomeTests : TestContext
         cut.Find("button").Click();
 
         // Assert – query stays empty, no exception thrown
-        Assert.Equal(string.Empty, _searchState.Query);
+        Assert.Equal(string.Empty, fakeSearchState.Query);
     }
 }
     

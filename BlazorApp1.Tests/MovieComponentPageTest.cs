@@ -5,15 +5,16 @@ using BlazorApp1.Components.Pages;
 using RichardSzalay.MockHttp;
 using System.Text.Json;
 using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 
 public class MovieComponentPageTest : TestContext
 {
-    private readonly FakeSearchState _searchState;
+    private readonly FakeSearchState fakeSearchState;
 
     public MovieComponentPageTest()
     {
-        _searchState = new FakeSearchState();   // create _searchState object
-        Services.AddSingleton(_searchState);    // Add the object to the Singleton service
+        var fakeSearchState = new FakeSearchState();   // create _searchState object
+        Services.AddSingleton<SearchState>(fakeSearchState);    // Add the object to the Singleton service
     }
 
     private void SetupHttpClient(List<Movie> movies)
@@ -31,7 +32,7 @@ public class MovieComponentPageTest : TestContext
     public void ShowLoadingBeforeDataArrives()
     {
         // Arrange – no HTTP setup so movies stays null
-        _searchState.SetQuery("matrix");
+        fakeSearchState.SetQuery("matrix");
         // Create a HTTP request and store it as a Singleton service
         var mockHttp = new MockHttpMessageHandler(); // Create Fake HTTP handler
         // Defines what to return when a request matches, here we delay it forever to stimulate the loading state
@@ -53,7 +54,7 @@ public class MovieComponentPageTest : TestContext
     public async Task MovieComponent_RendersMoviesAfterApiLoad()
     {
         // Arrange
-        _searchState.SetQuery("inception");
+        fakeSearchState.SetQuery("inception");
         var fakeMovies = new List<Movie>
         {
             new Movie{Title="Inception",Overview="Test",ReleaseDate="2026-01-01"},

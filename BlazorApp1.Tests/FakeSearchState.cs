@@ -1,5 +1,5 @@
 // Replaces the real one so the testing stays isolated from the app state.
-public class FakeSearchState
+public class FakeSearchState : SearchState
 {
     public string Query {get;private set;} = string.Empty;
     public event Action? OnChange;
