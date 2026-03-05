@@ -13,8 +13,8 @@ public class MovieComponentPageTest : TestContext
 
     public MovieComponentPageTest()
     {
-        var fakeSearchState = new FakeSearchState();   // create _searchState object
-        Services.AddSingleton<SearchState>(fakeSearchState);    // Add the object to the Singleton service
+        fakeSearchState = new FakeSearchState();   // create _searchState object
+        Services.AddScoped<SearchState>(_ => fakeSearchState);    // Add the object to the Singleton service
     }
 
     private void SetupHttpClient(List<Movie> movies)
@@ -47,7 +47,7 @@ public class MovieComponentPageTest : TestContext
         var cut = RenderComponent<MovieComponent>();
 
         // Assert
-        cut.Find("p").MarkupMatches("<p>Loading...</p>");
+        cut.FindAll("p").Last().MarkupMatches("<p>Loading...</p>");
     }
 
         [Fact]

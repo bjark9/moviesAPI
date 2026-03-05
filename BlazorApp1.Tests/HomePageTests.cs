@@ -12,7 +12,7 @@ public class HomeTests : TestContext
 
     public HomeTests()
     {
-        var fakeSearchState = new FakeSearchState();
+        fakeSearchState = new FakeSearchState();
         // Singleton service is fine here (instead of scoped), bUnit's TestContext doesn't understand scopes -> will act the same 
         Services.AddSingleton<SearchState>(fakeSearchState);
     }
@@ -26,7 +26,7 @@ public class HomeTests : TestContext
         var cut = RenderComponent<Home>();
 
         // Assert
-        cut.Find("input[type='search']").MarkupMatches("<input type=\"search\" id=\"site-search\" />");
+        cut.Find("input[type='search']").MarkupMatches("<input type=\"search\" id=\"site-search\" value=\"\" />");
         cut.Find("button").MarkupMatches("<button>Search</button>");
     }
 
@@ -51,11 +51,11 @@ public class HomeTests : TestContext
         var input = cut.Find("input[type='search']");
 
         // Act, create input and search it
-        input.Change("Star Wars");
+        input.Input("The Hobbit");
         cut.Find("button").Click();
 
         // Assert, SearchState should hold the input
-        Assert.Equal("Star Wars", fakeSearchState.Query.ToLower());
+        Assert.Equal("the hobbit", fakeSearchState.Query.ToLower());
 
         // Assert, navigationmanager should have navigated to /MovieComponent
         var navManager = Services.GetRequiredService<NavigationManager>();
