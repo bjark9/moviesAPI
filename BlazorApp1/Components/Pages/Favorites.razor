@@ -6,6 +6,7 @@
     @foreach (var movie in FavoritesState.Favorites)
     {
         <li>@movie.Title</li>
+        <button @onclick="() => HandleRemoveFromFavorites(movie)">Remove from Favorites</button>
     }
 </ul>
 
@@ -19,4 +20,10 @@
     {
         FavoritesState.OnChange -= StateHasChanged;
     }
+
+    public void HandleRemoveFromFavorites(Movie movie)
+    {
+        FavoritesState.RemoveFromFavorites(movie);
+    }
+
 }
