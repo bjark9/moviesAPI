@@ -1,5 +1,6 @@
 @page "/MovieComponent"
 @inject SearchState SearchState
+@inject FavoritesState FavoritesState
 @inject HttpClient Http
 @implements IDisposable
 @rendermode InteractiveServer
@@ -17,6 +18,7 @@ else{
             <h3>@movie.Title</h3>
             <p>@movie.Overview</p>
             <p><i>@movie.ReleaseDate</i></p>
+            <button @onclick="() => HandleAddToFavorites(movie)">Add to Favorites</button>
         </div>
     }
 }
@@ -40,5 +42,11 @@ else{
         var url = $"https://api.themoviedb.org/3/search/movie?api_key={Api_Key}&query={cleanQuery}"; 
         var response = await Http.GetFromJsonAsync<TmdbResponse>(url);
         movies = response?.Results;
+    }
+
+    public void HandleAddToFavorites(Movie movie)
+    {
+        FavoritesState.AddToFavorites(movie);
+        Console.WriteLine($"{movie} added to favorites");
     }
 }

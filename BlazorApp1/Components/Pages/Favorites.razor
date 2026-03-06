@@ -1,0 +1,22 @@
+@page "/favorites"
+@inject FavoritesState FavoritesState
+@implements IDisposable
+
+<ul>
+    @foreach (var movie in FavoritesState.Favorites)
+    {
+        <li>@movie.Title</li>
+    }
+</ul>
+
+@code {
+    protected override void OnInitialized()
+    {
+        FavoritesState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        FavoritesState.OnChange -= StateHasChanged;
+    }
+}
