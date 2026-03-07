@@ -9,6 +9,8 @@ public class User
         Username = username;
         HashedPassword = ConvertPasswordToHash(password);
     }
+    public List<Movie> userFavorites = new();
+    public IReadOnlyList<Movie> UserFavorites => userFavorites;
     public string Username {get;set;}
     public string HashedPassword {get; private set;} 
 

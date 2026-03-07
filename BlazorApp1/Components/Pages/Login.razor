@@ -1,5 +1,6 @@
 @page "/login"
-@inject Core.User User
+@inject UsersList UsersList
+@inject NavigationManager NavigationManager
 
 <h2>Login</h2>
 <label for="username">Username:</label>
@@ -9,13 +10,35 @@
 <input type="password" id="pwd" @bind="password"/>
 
 <label for="submit">Submit</label>
-<input type="submit" @onclick="() =>HandleConvertPasswordToHash(password)"/>
+<input type="submit" @onclick="HandleAuthentification"/>
 
 @code{
-    public string password;
-    public string username;
-    public void HandleConvertPasswordToHash(string password)
+    public string? password;
+    public string? username;
+    public void HandleAuthentification()
     {
-        
+        // Handle null input
+        if(username == null || password == null)
+        {
+            return;
+        }
+
+        User? existingUser = UsersList.Users.FirstOrDefault(u => u.Username == username);
+
+        if (existingUser == null)
+        {
+            Console.WriteLine("User not found");
+            return;
+        }
+
+        if (existingUser.VerifyPassword(password, existingUser.HashedPassword))
+        {
+            Console.WriteLine("User and password correct");
+            NavigationManager.NavigateTo("/favorites");
+        }
+        else
+        {
+            Console.WriteLine("Incorrect password");
+        }
     }
 }

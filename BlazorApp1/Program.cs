@@ -8,6 +8,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient(); // Add this for the API requests
 builder.Services.AddScoped<SearchState>(); // Add this so the SearchQuery is visible accross different components
 builder.Services.AddScoped<FavoritesState>(); 
+builder.Services.AddScoped<UsersList>();
 
 // debugging
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => {
