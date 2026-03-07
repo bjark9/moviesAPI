@@ -13,7 +13,8 @@
 
   <ItemGroup>
     <PackageReference Include="bunit" Version="1.38.5" />
-    <PackageReference Include="RichardSzalay.MockHttp" Version="7.0.0" /> 
+    <PackageReference Include="RichardSzalay.MockHttp" Version="7.0.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.3" /> 
     <PackageReference Include="xunit" Version="2.9.3" />
   </ItemGroup>
 

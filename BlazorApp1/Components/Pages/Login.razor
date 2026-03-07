@@ -1,0 +1,21 @@
+@page "/login"
+@inject Core.User User
+
+<h2>Login</h2>
+<label for="username">Username:</label>
+<input type="text" id="username" @bind="username"/>
+
+<label for="pwd">Password:</label>
+<input type="password" id="pwd" @bind="password"/>
+
+<label for="submit">Submit</label>
+<input type="submit" @onclick="() =>HandleConvertPasswordToHash(password)"/>
+
+@code{
+    public string password;
+    public string username;
+    public void HandleConvertPasswordToHash(string password)
+    {
+        
+    }
+}
