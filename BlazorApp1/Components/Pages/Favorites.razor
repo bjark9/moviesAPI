@@ -1,15 +1,23 @@
 @page "/favorites"
 @inject FavoritesState FavoritesState
+@inject UserService UserService
 @implements IDisposable
 
-<!-- TODO: Make this specific to each user. -->
-<ul>
-    @foreach (var movie in FavoritesState.Favorites)
-    {
-        <li>@movie.Title</li>
-        <button @onclick="() => HandleRemoveFromFavorites(movie)">Remove from Favorites</button>
-    }
-</ul>
+@if (UserService.CurrentUser == null)
+{
+    <p>You must <a href="/login">log in</a> to view your favorites.</p>
+}
+else
+{
+    <h3>@UserService.CurrentUser.Username's Favorites</h3>
+    <ul>
+        @foreach (var movie in FavoritesState.Favorites)
+        {
+            <li>@movie.Title</li>
+            <button @onclick="() => HandleRemoveFromFavorites(movie)">Remove from Favorites</button>
+        }
+    </ul>
+}
 
 @code {
     protected override void OnInitialized()

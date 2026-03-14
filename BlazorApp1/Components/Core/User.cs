@@ -13,7 +13,6 @@ public class User
     public IReadOnlyList<Movie> UserFavorites => userFavorites;
     public string Username {get;set;}
     public string HashedPassword {get; private set;} 
-
     public string ConvertPasswordToHash(string password)
     {
         // generate 128-bit salt using a sequence of cryptographically strong random bytes

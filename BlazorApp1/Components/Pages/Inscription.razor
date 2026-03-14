@@ -1,33 +1,44 @@
 @page "/inscription"
-@inject UsersList UsersList
+@inject UserService UserService
 @inject NavigationManager NavigationManager
-
 
 <h2>Inscription</h2>
 <label for="username">Username:</label>
-<input type="text" id="username" @bind="username"/>
+<input type="text" id="username" @bind="username" />
 
 <label for="pwd">Password:</label>
-<input type="password" id="pwd" @bind="password"/>
+<input type="password" id="pwd" @bind="password" />
 
 <label for="submit">Submit</label>
-<input type="submit" @onclick="HandleInscription"/> <!-- TODO: handle null input -->
+<input type="submit" @onclick="HandleInscription" />
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <p>@message</p>
+}
 
 @code{
     public string? password;
     public string? username;
+    private string? message;
+
     public void HandleInscription()
     {
-        // Handle null input
-        if(username == null || password == null)
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
+            message = "Please provide both username and password.";
             return;
         }
-        // Store user in scoped service
-        // new User() calls the ConvertPasswordToHash internally, no need to do it here.
-        User user = new(username,password);
-        UsersList.Users.Add(user);
-        NavigationManager.NavigateTo("/login");
-    }
 
+        bool registered = UserService.Register(username!, password!);
+        if (registered)
+        {
+            message = "Registration successful. You can now log in.";
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            message = "Username already taken.";
+        }
+    }
 }

@@ -1,6 +1,16 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject UserService UserService
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Home</a>
+        @*When a user is logged in: *@
+        @if (UserService.CurrentUser != null)
+        {
+            <span class="text-light ms-3">Welcome, @UserService.CurrentUser.Username!</span>
+            <button class="btn btn-link text-light" @onclick="Logout">Logout</button>
+        }
     </div>
 </div>
 
@@ -20,18 +30,39 @@
             </NavLink> 
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/inscription">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Inscription
-            </NavLink> 
-        </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/login">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Login
-            </NavLink> 
-        </div>
+        @*If no user is connected yet: *@
+        @if (UserService.CurrentUser == null)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/inscription">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Inscription
+                </NavLink> 
+            </div>
 
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/login">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Login
+                </NavLink> 
+            </div>
+        }
     </nav>
 </div>
 
+@code {
+    protected override void OnInitialized()
+    {
+        UserService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        UserService.OnChange -= StateHasChanged;
+    }
+
+    private void Logout()
+    {
+        UserService.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+}

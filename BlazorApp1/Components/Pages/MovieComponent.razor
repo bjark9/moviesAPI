@@ -1,6 +1,7 @@
 @page "/MovieComponent"
 @inject SearchState SearchState
 @inject FavoritesState FavoritesState
+@inject UserService UserService
 @inject HttpClient Http
 @implements IDisposable
 @rendermode InteractiveServer
@@ -18,13 +19,21 @@ else{
             <h3>@movie.Title</h3>
             <p>@movie.Overview</p>
             <p><i>@movie.ReleaseDate</i></p>
-            <button @onclick="() => HandleAddToFavorites(movie)">Add to Favorites</button>
+            @if (UserService.CurrentUser == null)
+            {
+                <button disabled title="Log in to save favorites">Add to Favorites</button>
+            }
+            else
+            {
+                <button @onclick="() => HandleAddToFavorites(movie)">Add to Favorites</button>
+            }
         </div>
     }
 }
 
 @code{
     private List<Movie> movies;
+    // TODO : hide API keys in another hidden file
     private const string Api_Key = "c6f8adf7fa28d807a16201da90b70677"; // simpler, passed through url query parameter, less secure
     private const string Api_Read_Access_Token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmY4YWRmN2ZhMjhkODA3YTE2MjAxZGE5MGI3MDY3NyIsIm5iZiI6MTc3MTA1OTQ0OC40MDQsInN1YiI6IjY5OTAzOGY4MGU2YjA2NTkyMGM4ZWZiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.8NyvxkzjD3gsJ70Qg77t-GYK3x_NqeyfNhjfbfFglhw"; // More secure, passed via Authorization Header
     protected override void OnInitialized()
@@ -46,7 +55,14 @@ else{
 
     public void HandleAddToFavorites(Movie movie)
     {
+        if (UserService.CurrentUser == null)
+        {
+            // should not happen with disabled button, but guard anyway
+            Console.WriteLine("Cannot add favorites when not logged in");
+            return;
+        }
+
         FavoritesState.AddToFavorites(movie);
-        Console.WriteLine($"{movie} added to favorites");
+        Console.WriteLine($"{movie} added to favorites for {UserService.CurrentUser.Username}");
     }
 }

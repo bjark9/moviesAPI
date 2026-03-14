@@ -1,44 +1,44 @@
 @page "/login"
-@inject UsersList UsersList
+@inject UserService UserService
 @inject NavigationManager NavigationManager
 
 <h2>Login</h2>
 <label for="username">Username:</label>
-<input type="text" id="username" @bind="username"/>
+<input type="text" id="username" @bind="username" />
 
 <label for="pwd">Password:</label>
-<input type="password" id="pwd" @bind="password"/>
+<input type="password" id="pwd" @bind="password" />
 
 <label for="submit">Submit</label>
-<input type="submit" @onclick="HandleAuthentification"/>
+<input type="submit" @onclick="HandleAuthentification" />
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <p>@message</p>
+}
 
 @code{
     public string? password;
     public string? username;
+    private string? message;
+
     public void HandleAuthentification()
     {
-        // Handle null input
-        if(username == null || password == null)
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
+            message = "Please enter both username and password.";
             return;
         }
 
-        User? existingUser = UsersList.Users.FirstOrDefault(u => u.Username == username);
-
-        if (existingUser == null)
+        bool success = UserService.Login(username!, password!);
+        if (success)
         {
-            Console.WriteLine("User not found");
-            return;
-        }
-
-        if (existingUser.VerifyPassword(password, existingUser.HashedPassword))
-        {
-            Console.WriteLine("User and password correct");
+            message = "Login successful.";
             NavigationManager.NavigateTo("/favorites");
         }
         else
         {
-            Console.WriteLine("Incorrect password");
+            message = "Invalid credentials.";
         }
     }
 }
