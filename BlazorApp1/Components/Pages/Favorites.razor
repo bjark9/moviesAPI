@@ -14,12 +14,17 @@ else
         @foreach (var movie in FavoritesState.Favorites)
         {
             <li>@movie.Title</li>
+            <p>@note</p>
             <button @onclick="() => HandleRemoveFromFavorites(movie)">Remove from Favorites</button>
+            <input @bind="inputValue" />
+            <button @onclick="AddNote">Modify</button>
         }
     </ul>
 }
 
 @code {
+    private string? note;
+    private string? inputValue;
     protected override void OnInitialized()
     {
         FavoritesState.OnChange += StateHasChanged;
@@ -33,6 +38,10 @@ else
     public void HandleRemoveFromFavorites(Movie movie)
     {
         FavoritesState.RemoveFromFavorites(movie);
+    }
+    public void AddNote()
+    {
+        note = inputValue;
     }
 
 }
