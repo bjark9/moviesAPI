@@ -1,6 +1,5 @@
 using BlazorApp1.Components.Core;
 
-
 public class FavoritesState
 {
     private readonly UserService _userService;

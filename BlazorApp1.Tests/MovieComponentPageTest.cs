@@ -15,6 +15,11 @@ public class MovieComponentPageTest : TestContext
     {
         fakeSearchState = new FakeSearchState();   // create _searchState object
         Services.AddScoped<SearchState>(_ => fakeSearchState);    // Add the object to the Singleton service
+
+        // new services required by the modified components
+        var userService = new UserService();
+        Services.AddSingleton<UserService>(userService);
+        Services.AddSingleton<FavoritesState>(new FavoritesState(userService));
     }
 
     private void SetupHttpClient(List<Movie> movies)
